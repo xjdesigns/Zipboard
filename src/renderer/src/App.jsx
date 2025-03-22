@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { SlSpinner, SlAnimation } from './components/shoelace'
+import { SlAnimation } from './components/shoelace'
 import Header from './components/header'
 import Core from './components/core'
 import { Footer } from './components/footer'
@@ -22,8 +22,11 @@ function App() {
       window.electron.ipcRenderer.once('APP_LOADED', (_, args) => {
         if (args && !data) {
           console.log('args', args)
-          setMounted(true)
           setData(args)
+
+          if (!mounted) {
+            setMounted(true)
+          }
         } else {
           window.electron.ipcRenderer.removeAllListeners('APP_IS_READY')
           window.electron.ipcRenderer.removeAllListeners('APP_LOADED')
@@ -34,8 +37,19 @@ function App() {
 
   useEffect(() => {
     if (mounted) {
+      console.log('Mounting')
       window.electron.ipcRenderer.on('COPY_FROM_CLIPBOARD', (_, args) => {
         console.log('COPY_FROM_CLIPBOARD::: args', args)
+        const { clipboardText } = args
+        const newData = { ...data }
+        const newEntry = {
+          text: clipboardText,
+          date: new Date().toLocaleDateString(),
+          type: 'STANDARD'
+        }
+        newData.history.push(newEntry)
+        window.electron.ipcRenderer.send('SAVE_FILE', newData)
+        setData(newData)
       })
     }
   }, [mounted])
@@ -43,12 +57,25 @@ function App() {
   const handleSaveUI = (val, key) => {
     const newData = { ...data }
     newData.ui[key] = val
-    // window.electron.ipcRenderer.send('SAVE_FILE', newData)
+
+    if (key === 'historyLength') {
+      if (newData.history.length > val) {
+        // TODO: Handle this and items component to properly reflect the changes
+      }
+    }
+
+    window.electron.ipcRenderer.send('SAVE_FILE', newData)
     setData(newData)
   }
 
   const handleSaveList = (updatedList) => {
-    const newData = { ...data, listItems: updatedList }
+    const newData = { ...data, history: updatedList }
+    window.electron.ipcRenderer.send('SAVE_FILE', newData)
+    setData(newData)
+  }
+
+  const handleClearHistory = () => {
+    const newData = { ...data, history: [] }
     window.electron.ipcRenderer.send('SAVE_FILE', newData)
     setData(newData)
   }
@@ -56,10 +83,6 @@ function App() {
   return (
     <div className={`zp-app ${!data ? 'is-loading' : ''}`}>
       {!data && (
-        // <div className="zp-app-loader">
-        //   <SlSpinner />
-        //   <div>Loading...</div>
-        // </div>
         <div className="zp-app-loader">
           <SlAnimation name="bounce" duration={2000} play>
             <img src={logo} alt="Zipboard Logo" className="zp-header-logo" />
@@ -67,15 +90,9 @@ function App() {
         </div>
       )}
 
-      {/* <div className="zp-app-loader">
-        <SlAnimation name="bounce" duration={2000} play>
-          <img src={logo} alt="Zipboard Logo" className="zp-header-logo" />
-        </SlAnimation>
-      </div> */}
-
       {data && (
         <>
-          <Header data={data} handleSaveUI={handleSaveUI} />
+          <Header data={data} handleSaveUI={handleSaveUI} clearHistory={handleClearHistory} />
           <Core data={data} saveData={handleSaveList} />
           <Footer />
         </>

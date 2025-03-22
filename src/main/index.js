@@ -58,7 +58,10 @@ app.whenReady().then(() => {
       label: 'Add Clipboard',
       click: () => {
         const text = clipboard.readText()
-        mainWindow.webContents.send('COPY_FROM_CLIPBOARD', { clipboardText: text })
+        if (text && text.length) {
+          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', { clipboardText: text })
+        }
+        clipboard.clear()
       }
     },
     {
@@ -100,7 +103,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  ipcMain.on('APP_IS_READY', event => {
+  ipcMain.on('APP_IS_READY', (event) => {
     setTimeout(() => {
       console.warn('APP_IS_READY event')
       getFileData(event, 'APP_LOADED')
@@ -112,7 +115,7 @@ app.whenReady().then(() => {
   ipcMain.on('SAVE_FILE', (_, data) => {
     console.warn('SAVE FILE data', data)
     const file = JSON.stringify(data, null, '  ')
-    fs.writeFile(join(FILE_LOCATION), file, err => {
+    fs.writeFile(join(FILE_LOCATION), file, (err) => {
       if (err) {
         console.error(err)
       } else {

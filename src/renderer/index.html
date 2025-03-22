@@ -1,0 +1,17 @@
+<!doctype html>
+<html class="sl-theme-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Zipboard</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' *.jsdelivr.net localhost:* ws://localhost:*; script-src 'self' *.jsdelivr.net localhost:* ws://localhost:*; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://cdn.jsdelivr.net data: localhost:* ws://localhost:*"
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

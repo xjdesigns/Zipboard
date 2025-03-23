@@ -54,6 +54,10 @@ export const Items = ({ data, handleSave }) => {
   }
 
   const handelAdd = () => {
+    if (!currentInput) {
+      return
+    }
+
     const newEntry = itemTypeDetect(currentInput)
     const newList = [newEntry, ...list]
     if (newList.length > historyLength) {

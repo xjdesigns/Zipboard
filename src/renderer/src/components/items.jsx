@@ -21,6 +21,7 @@ export const Items = ({ data, handleSave }) => {
   const [searchValue, setSearchValue] = useState('')
   const [filterSearch, setFilterSearch] = useState(ALL_TYPE)
   const list = data.history || []
+  const historyLength = data.ui.historyLength
   const lineIsClamped = data.ui.lineClamp
   const showDates = data.ui.showDates
   const showTypes = data.ui.showTypes
@@ -44,7 +45,6 @@ export const Items = ({ data, handleSave }) => {
 
   const handleFilter = (ev) => {
     const val = ev.target.value
-    console.log('val', val)
     setFilterSearch(val)
   }
 
@@ -56,8 +56,10 @@ export const Items = ({ data, handleSave }) => {
   const handelAdd = () => {
     const newEntry = itemTypeDetect(currentInput)
     const newList = [newEntry, ...list]
-    if (newList.length > data.ui.historyLength) {
+    if (newList.length > historyLength) {
       setlengthError(true)
+      const update = newList.filter((_, idx) => idx < historyLength)
+      handleSave(update)
       return
     }
 
@@ -70,28 +72,36 @@ export const Items = ({ data, handleSave }) => {
     handleSave(update)
   }
 
+  const handleSubmit = (ev) => {
+    ev.preventDefault()
+    handelAdd()
+  }
+
   return (
     <div>
-      <div className="zp-flex">
-        <div className="zp-flex-fill">
-          <SlInput
-            clearable
-            size="small"
-            help-text="Paste a link to save"
-            onSlInput={handleInput}
-            value={currentInput}
-            placeholder="Something cool to reuse"
+      <form onSubmit={handleSubmit}>
+        <div className="zp-flex">
+          <div className="zp-flex-fill">
+            <SlInput
+              clearable
+              size="small"
+              help-text="Paste a link to save"
+              onSlInput={handleInput}
+              value={currentInput}
+              placeholder="Something cool to reuse"
+            />
+          </div>
+          <SlButton size="small" onClick={handelAdd} disabled={currentInput.length === 0}>
+            Add
+          </SlButton>
+          <SlIconButton
+            name="search-heart"
+            label="Search"
+            type="submit"
+            onClick={() => setIsSearching(!isSearching)}
           />
         </div>
-        <SlButton size="small" onClick={handelAdd} disabled={currentInput.length === 0}>
-          Add
-        </SlButton>
-        <SlIconButton
-          name="search-heart"
-          label="Search"
-          onClick={() => setIsSearching(!isSearching)}
-        />
-      </div>
+      </form>
 
       <SlAlert
         variant="danger"
@@ -100,7 +110,8 @@ export const Items = ({ data, handleSave }) => {
         onSlAfterHide={() => setlengthError(false)}
       >
         <SlIcon slot="icon" name="exclamation-octagon" />
-        <strong>Cannot exceed your history length.</strong>
+        <strong>History length.</strong>
+        <p>The last item(s) have been removed.</p>
       </SlAlert>
 
       <div className="zp-search">

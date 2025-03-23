@@ -4,7 +4,7 @@ import Header from './components/header'
 import Core from './components/core'
 import { Footer } from './components/footer'
 import { toggleTheme } from './util/theme'
-import { itemTypeDetect } from './util/item'
+import { itemTypeDetect, filterHistoryByType } from './util/item'
 import logo from './assets/icon.png'
 
 function App() {
@@ -23,7 +23,6 @@ function App() {
     if (!data) {
       window.electron.ipcRenderer.once('APP_LOADED', (_, args) => {
         if (args && !data) {
-          // console.log('args', args)
           setData(args)
 
           if (!mounted) {
@@ -39,9 +38,7 @@ function App() {
 
   useEffect(() => {
     if (mounted) {
-      // console.log('Mounting')
       window.electron.ipcRenderer.on('COPY_FROM_CLIPBOARD', (_, args) => {
-        // console.log('COPY_FROM_CLIPBOARD::: args', args)
         const { clipboardText } = args
         const newEntry = itemTypeDetect(clipboardText)
         clipboardUpdate(newEntry)
@@ -108,6 +105,13 @@ function App() {
     setData(newData)
   }
 
+  const handleClearHistoryType = (type) => {
+    const history = filterHistoryByType(data.history, type)
+    const newData = { ...data, history }
+    window.electron.ipcRenderer.send('SAVE_FILE', newData)
+    setData(newData)
+  }
+
   return (
     <div className={`zp-app ${!data ? 'is-loading' : ''}`}>
       {!data && (
@@ -120,9 +124,14 @@ function App() {
 
       {data && (
         <>
-          <Header data={data} handleSaveUI={handleSaveUI} clearHistory={handleClearHistory} />
+          <Header
+            data={data}
+            handleSaveUI={handleSaveUI}
+            clearHistory={handleClearHistory}
+            clearHistoryType={handleClearHistoryType}
+          />
           <Core data={data} saveData={handleSaveList} />
-          <Footer />
+          <Footer data={data} />
         </>
       )}
     </div>

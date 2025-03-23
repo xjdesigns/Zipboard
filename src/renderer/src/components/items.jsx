@@ -41,7 +41,7 @@ export const Items = ({ data, handleSave }) => {
     } else {
       return results
     }
-  }, [searchValue, filterSearch, data])
+  }, [searchValue, filterSearch, data, list])
 
   const handleFilter = (ev) => {
     const val = ev.target.value

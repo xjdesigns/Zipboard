@@ -92,6 +92,11 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
     setShowClear(false)
   }
 
+  const scrollToTop = () => {
+    const el = document.querySelector('#zpCore')
+    el.scrollTop = 0
+  }
+
   return (
     <>
       <header className="zp-header">
@@ -99,6 +104,9 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
         <div className="zp-h-title">Zipboard</div>
 
         <div className="zp-h-actions">
+          <SlButton onClick={scrollToTop} size="small" circle>
+            <SlIcon name="arrow-bar-up" />
+          </SlButton>
           <SlButton onClick={() => setSettingsOpen(true)} size="small" circle>
             <SlIcon name="gear-wide-connected" />
           </SlButton>

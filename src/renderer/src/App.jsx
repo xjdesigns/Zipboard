@@ -4,6 +4,7 @@ import Header from './components/header'
 import Core from './components/core'
 import { Footer } from './components/footer'
 import { toggleTheme } from './util/theme'
+import { itemTypeDetect } from './util/item'
 import logo from './assets/icon.png'
 
 function App() {
@@ -42,11 +43,7 @@ function App() {
       window.electron.ipcRenderer.on('COPY_FROM_CLIPBOARD', (_, args) => {
         // console.log('COPY_FROM_CLIPBOARD::: args', args)
         const { clipboardText } = args
-        const newEntry = {
-          text: clipboardText,
-          date: new Date().toLocaleDateString(),
-          type: 'STANDARD'
-        }
+        const newEntry = itemTypeDetect(clipboardText)
         clipboardUpdate(newEntry)
       })
     }

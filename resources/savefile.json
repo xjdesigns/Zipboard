@@ -1,6 +1,36 @@
 {
   "history": [
     {
+      "text": "zipboard-old.png",
+      "date": "3/23/2025",
+      "type": "IMAGE"
+    },
+    {
+      "text": "\nhttps://shoelace.style/components/badge",
+      "date": "3/23/2025",
+      "type": "HTTP"
+    },
+    {
+      "text": "<SlSelect>     <SlOption value=\"option-1\">Option 1</SlOption>     <SlOption value=\"option-2\">Option 2</SlOption>     <SlOption value=\"option-3\">Option 3</SlOption>     <SlOption value=\"option-4\">Option 4</SlOption>     <SlOption value=\"option-5\">Option 5</SlOption>     <SlOption value=\"option-6\">Option 6</SlOption>   </SlSelect>",
+      "date": "3/23/2025",
+      "type": "STANDARD"
+    },
+    {
+      "text": "zipboard-old.png",
+      "date": "3/23/2025",
+      "type": "IMAGE"
+    },
+    {
+      "text": "https://shoelace.style/components/badge",
+      "date": "3/23/2025",
+      "type": "HTTP"
+    },
+    {
+      "text": "hello world",
+      "date": "3/23/2025",
+      "type": "STANDARD"
+    },
+    {
       "text": "World",
       "date": "3/23/2025",
       "type": "STANDARD"
@@ -16,6 +46,8 @@
     "lineClamp": true,
     "historyLength": 100,
     "showDates": true,
-    "searchRule": "strict"
+    "showType": false,
+    "searchRule": "strict",
+    "showTypes": true
   }
 }

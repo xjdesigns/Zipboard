@@ -1,28 +1,52 @@
 import { useState, useMemo } from 'react'
-import { SlInput, SlButton, SlCopyButton, SlIconButton, SlAlert, SlIcon } from './shoelace'
+import {
+  SlInput,
+  SlButton,
+  SlCopyButton,
+  SlIconButton,
+  SlAlert,
+  SlIcon,
+  SlSelect,
+  SlOption
+} from './shoelace'
 import { searchConversion } from '../util/search'
+import { itemTypeDetect, TYPE_OPTIONS } from '../util/item'
+
+const ALL_TYPE = 'ALL'
 
 export const Items = ({ data, handleSave }) => {
   const [currentInput, setCurrentInput] = useState('')
   const [lengthError, setlengthError] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const [filterSearch, setFilterSearch] = useState(ALL_TYPE)
   const list = data.history || []
   const lineIsClamped = data.ui.lineClamp
   const showDates = data.ui.showDates
+  const showTypes = data.ui.showTypes
   const searchRule = data.ui.searchRule
 
   const filtered = useMemo(() => {
+    let results = list
+    if (filterSearch !== ALL_TYPE) {
+      results = results.filter((r) => r.type === filterSearch)
+    }
     if (searchValue) {
-      const results = list.filter((l) => {
+      results = results.filter((l) => {
         const s = searchConversion(l.text, searchRule)
         return s.includes(searchValue)
       })
       return results
     } else {
-      return list
+      return results
     }
-  }, [searchValue, data])
+  }, [searchValue, filterSearch, data])
+
+  const handleFilter = (ev) => {
+    const val = ev.target.value
+    console.log('val', val)
+    setFilterSearch(val)
+  }
 
   const handleInput = (ev) => {
     const val = ev.target.value
@@ -30,11 +54,7 @@ export const Items = ({ data, handleSave }) => {
   }
 
   const handelAdd = () => {
-    const newEntry = {
-      text: currentInput,
-      date: new Date().toLocaleDateString(),
-      type: 'STANDARD'
-    }
+    const newEntry = itemTypeDetect(currentInput)
     const newList = [newEntry, ...list]
     if (newList.length > data.ui.historyLength) {
       setlengthError(true)
@@ -86,20 +106,42 @@ export const Items = ({ data, handleSave }) => {
       <div className="zp-search">
         {isSearching && (
           <div className="zp-mg-tp">
-            <SlInput
-              clearable
-              size="small"
-              onSlInput={(ev) => setSearchValue(ev.target.value)}
-              value={searchValue}
-              placeholder="Search your saved history"
-            />
+            <div className="zp-flex">
+              <div className="zp-flex-fill">
+                <SlSelect
+                  label="Filter Type"
+                  size="small"
+                  value={filterSearch}
+                  onSlChange={handleFilter}
+                >
+                  <SlOption value={ALL_TYPE}>{ALL_TYPE}</SlOption>
+                  {TYPE_OPTIONS.map((type) => {
+                    return (
+                      <SlOption value={type} key={type}>
+                        {type}
+                      </SlOption>
+                    )
+                  })}
+                </SlSelect>
+              </div>
+              <div className="zp-flex-fill">
+                <SlInput
+                  label="Search History"
+                  clearable
+                  size="small"
+                  onSlInput={(ev) => setSearchValue(ev.target.value)}
+                  value={searchValue}
+                  placeholder="Search your history"
+                />
+              </div>
+            </div>
           </div>
         )}
       </div>
 
       <div className="zp-divider" />
 
-      <div className={`zp-list ${showDates ? 'show-dates' : ''}`}>
+      <div className={`zp-list ${showDates ? 'show-dates' : ''} ${showTypes ? 'show-types' : ''}`}>
         {filtered.length === 0 && (
           <SlAlert open>
             <SlIcon slot="icon" name="info-circle" />
@@ -125,7 +167,8 @@ export const Items = ({ data, handleSave }) => {
                       {l.text}
                     </div>
                   </div>
-                  <div className="zp-ldate">{l.date}</div>
+                  <div className="zp-addon zp-date">{l.date}</div>
+                  <div className="zp-addon zp-type">{l.type}</div>
                 </div>
                 <div>
                   <SlIconButton name="trash2-fill" onClick={() => handleDelete(idx)} />

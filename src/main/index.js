@@ -54,7 +54,7 @@ app.whenReady().then(() => {
 
   // Create the tray menu
   const template = [
-    { label: 'Zipload App' },
+    { label: 'Zipload App', enabled: false },
     { type: 'separator' },
     {
       label: 'Add Clipboard',

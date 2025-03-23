@@ -8,6 +8,7 @@ const Header = ({ data, handleSaveUI, clearHistory }) => {
   const [historyLength, setHistoryLength] = useState(data.ui.historyLength)
   const [isLineClamped, setLineClamped] = useState(data.ui.lineClamp)
   const [showDates, setShowDates] = useState(data.ui.showDates)
+  const [showTypes, setShowTypes] = useState(data.ui.showTypes)
   const searchRule = data.ui.searchRule
 
   // There is a bug with the value not being proper here from value
@@ -52,6 +53,12 @@ const Header = ({ data, handleSaveUI, clearHistory }) => {
     const checked = ev.target.checked
     setShowDates(checked)
     handleSaveUI(checked, 'showDates')
+  }
+
+  const handleShowTypes = (ev) => {
+    const checked = ev.target.checked
+    setShowTypes(checked)
+    handleSaveUI(checked, 'showTypes')
   }
 
   const handleSearchRule = (ev) => {
@@ -131,9 +138,14 @@ const Header = ({ data, handleSaveUI, clearHistory }) => {
             Line Clamp
           </SlSwitch>
         </div>
-        <div>
+        <div className="zp-mg-bt">
           <SlSwitch checked={showDates} onSlChange={handleShowDates} size="small">
             Show Dates
+          </SlSwitch>
+        </div>
+        <div>
+          <SlSwitch checked={showTypes} onSlChange={handleShowTypes} size="small">
+            Show Types
           </SlSwitch>
         </div>
         <div className="zp-divider" />

@@ -5,12 +5,14 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayImage from '../../resources/zipboard.png?asset'
 const FILE_LOCATION = join(__dirname, '../../resources/savefile.json')
+const logSaveResults = false
 
 let mainWindow
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 500,
+    minWidth: 320,
     height: 990,
     show: false,
     autoHideMenuBar: true,
@@ -59,9 +61,8 @@ app.whenReady().then(() => {
       click: () => {
         const text = clipboard.readText()
         if (text && text.length) {
-          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', { clipboardText: text })
+          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', { clipboardText: `${text}` })
         }
-        clipboard.clear()
       }
     },
     {
@@ -108,12 +109,13 @@ app.whenReady().then(() => {
       console.warn('APP_IS_READY event')
       getFileData(event, 'APP_LOADED')
     }, 2000)
-    // console.warn('APP_IS_READY event')
-    // getFileData(event, 'APP_LOADED')
   })
 
   ipcMain.on('SAVE_FILE', (_, data) => {
-    console.warn('SAVE FILE data', data)
+    if (logSaveResults) {
+      console.warn('SAVE FILE data', data)
+    }
+
     const file = JSON.stringify(data, null, '  ')
     fs.writeFile(join(FILE_LOCATION), file, (err) => {
       if (err) {

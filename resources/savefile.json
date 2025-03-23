@@ -1,40 +1,21 @@
 {
   "history": [
     {
-      "text": "mounted",
-      "date": "3/22/2025",
+      "text": "World",
+      "date": "3/23/2025",
       "type": "STANDARD"
     },
     {
-      "text": "variant=",
-      "date": "3/22/2025",
-      "type": "STANDARD"
-    },
-    {
-      "text": "Setting a Custom Width",
-      "date": "3/22/2025",
-      "type": "STANDARD"
-    },
-    {
-      "text": "2025-03-22 17:35:59.585 Electron[82242:40347158] WARNING: Secure coding is automatically enabled for restorable state! However, not on all supported macOS versions of this application. Opt-in to secure coding explicitly by implementing NSApplicationDelegate.applicationSupportsSecureRestorableState:.",
-      "date": "3/22/2025",
-      "type": "STANDARD"
-    },
-    {
-      "text": " Icons buttons are simple, icon-only buttons that can be used for actions and in toolbars.\n\nFor a full list of icons that come bundled with Shoelace, refer to the icon component. ",
-      "date": "3/22/2025",
-      "type": "STANDARD"
-    },
-    {
-      "text": "r, not on all supported macO",
-      "date": "3/22/2025",
+      "text": "hello world",
+      "date": "3/23/2025",
       "type": "STANDARD"
     }
   ],
   "ui": {
+    "theme": "dark",
     "lineClamp": true,
-    "historyLength": "100",
-    "maxValues": "100",
-    "showDates": true
+    "historyLength": 100,
+    "showDates": true,
+    "searchRule": "strict"
   }
 }

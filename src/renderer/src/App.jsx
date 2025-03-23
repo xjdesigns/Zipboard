@@ -3,6 +3,7 @@ import { SlAnimation } from './components/shoelace'
 import Header from './components/header'
 import Core from './components/core'
 import { Footer } from './components/footer'
+import { toggleTheme } from './util/theme'
 import logo from './assets/icon.png'
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
     if (!data) {
       window.electron.ipcRenderer.once('APP_LOADED', (_, args) => {
         if (args && !data) {
-          console.log('args', args)
+          // console.log('args', args)
           setData(args)
 
           if (!mounted) {
@@ -37,33 +38,63 @@ function App() {
 
   useEffect(() => {
     if (mounted) {
-      console.log('Mounting')
+      // console.log('Mounting')
       window.electron.ipcRenderer.on('COPY_FROM_CLIPBOARD', (_, args) => {
-        console.log('COPY_FROM_CLIPBOARD::: args', args)
+        // console.log('COPY_FROM_CLIPBOARD::: args', args)
         const { clipboardText } = args
-        const newData = { ...data }
         const newEntry = {
           text: clipboardText,
           date: new Date().toLocaleDateString(),
           type: 'STANDARD'
         }
-        newData.history.push(newEntry)
-        window.electron.ipcRenderer.send('SAVE_FILE', newData)
-        setData(newData)
+        clipboardUpdate(newEntry)
       })
     }
   }, [mounted])
 
-  const handleSaveUI = (val, key) => {
-    const newData = { ...data }
-    newData.ui[key] = val
+  const clipboardUpdate = (newEntry) => {
+    setData((prev) => {
+      const newData = {
+        ...prev,
+        history: [newEntry, ...prev.history]
+      }
+      window.electron.ipcRenderer.send('SAVE_FILE', newData)
+      return newData
+    })
+  }
 
+  useEffect(() => {
+    if (mounted) {
+      const theme = data.ui.theme
+      toggleTheme(theme)
+    }
+  }, [mounted])
+
+  const handleSaveUI = (val, key) => {
     if (key === 'historyLength') {
-      if (newData.history.length > val) {
-        // TODO: Handle this and items component to properly reflect the changes
+      if (data.history.length > val) {
+        const updatedHistory = data.history.filter((_, idx) => {
+          return idx < val
+        })
+
+        setData((prev) => {
+          const updated = {
+            ...prev,
+            ui: {
+              ...prev.ui,
+              [key]: val
+            },
+            history: updatedHistory
+          }
+          window.electron.ipcRenderer.send('SAVE_FILE', updated)
+          return updated
+        })
+        return
       }
     }
 
+    const newData = { ...data }
+    newData.ui[key] = val
     window.electron.ipcRenderer.send('SAVE_FILE', newData)
     setData(newData)
   }

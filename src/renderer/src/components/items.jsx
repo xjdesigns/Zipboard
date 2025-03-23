@@ -1,21 +1,22 @@
 import { useState, useMemo } from 'react'
 import { SlInput, SlButton, SlCopyButton, SlIconButton, SlAlert, SlIcon } from './shoelace'
+import { searchConversion } from '../util/search'
 
 export const Items = ({ data, handleSave }) => {
   const [currentInput, setCurrentInput] = useState('')
-  // TODO: Remove this in favor of a save to handle history changes
-  // const [list, setList] = useState(data.history || [])
   const [lengthError, setlengthError] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const list = data.history || []
   const lineIsClamped = data.ui.lineClamp
   const showDates = data.ui.showDates
+  const searchRule = data.ui.searchRule
 
   const filtered = useMemo(() => {
     if (searchValue) {
       const results = list.filter((l) => {
-        return l.text.includes(searchValue)
+        const s = searchConversion(l.text, searchRule)
+        return s.includes(searchValue)
       })
       return results
     } else {
@@ -41,14 +42,12 @@ export const Items = ({ data, handleSave }) => {
     }
 
     handleSave(newList)
-    // setList(newList)
     setCurrentInput('')
   }
 
   const handleDelete = (idx) => {
     const update = list.filter((_, didx) => didx !== idx)
     handleSave(update)
-    // setList(update)
   }
 
   return (
@@ -64,7 +63,7 @@ export const Items = ({ data, handleSave }) => {
             placeholder="Something cool to reuse"
           />
         </div>
-        <SlButton size="small" onClick={handelAdd}>
+        <SlButton size="small" onClick={handelAdd} disabled={currentInput.length === 0}>
           Add
         </SlButton>
         <SlIconButton
@@ -107,7 +106,7 @@ export const Items = ({ data, handleSave }) => {
             {isSearching ? (
               <>{'No results from search'}</>
             ) : (
-              <>{'Start adding clipboards from the input above or Tray option. Enjoy.'}</>
+              <>{'Start adding Zipboards from the input or Tray option. Enjoy.'}</>
             )}
           </SlAlert>
         )}

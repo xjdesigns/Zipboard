@@ -15,7 +15,7 @@ import { TYPE_OPTIONS } from '../util/item'
 import logo from '../assets/icon.png'
 
 const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
-  const [settingsOpen, setSettingsOpen] = useState(true)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [showClear, setShowClear] = useState(false)
   const [historyLength, setHistoryLength] = useState(data.ui.historyLength)
   const [isLineClamped, setLineClamped] = useState(data.ui.lineClamp)

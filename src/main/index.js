@@ -83,6 +83,19 @@ app.whenReady().then(() => {
     },
     { type: 'separator' },
     {
+      label: 'Copy 1st Fav',
+      click: () => {
+        getFileDataForCopy(0)
+      }
+    },
+    {
+      label: 'Copy 2nd Fav',
+      click: () => {
+        getFileDataForCopy(1)
+      }
+    },
+    { type: 'separator' },
+    {
       label: 'Show',
       click: () => {
         mainWindow.restore()
@@ -172,5 +185,22 @@ function getFileData(event, channel) {
     }
     const file = JSON.parse(data)
     event.sender.send(channel, file)
+  })
+}
+
+function getFileDataForCopy(idx) {
+  fs.readFile(FILE_LOCATION, (err, data) => {
+    if (err) console.error('No File Located')
+    if (err) {
+      return
+    }
+    const file = JSON.parse(data)
+    const filtered = file.history.filter((i) => i.isFavorite)
+    const whichToCopy = filtered.find((_, fidx) => fidx === idx)
+    if (whichToCopy) {
+      clipboard.writeText(whichToCopy.text)
+    } else {
+      clipboard.writeText('No match to copy')
+    }
   })
 }

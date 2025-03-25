@@ -39,8 +39,8 @@ function App() {
   useEffect(() => {
     if (mounted) {
       window.electron.ipcRenderer.on('COPY_FROM_CLIPBOARD', (_, args) => {
-        const { clipboardText } = args
-        const newEntry = itemTypeDetect(clipboardText)
+        const { clipboardText, isFavorite } = args
+        const newEntry = itemTypeDetect(clipboardText, isFavorite)
         clipboardUpdate(newEntry)
       })
     }

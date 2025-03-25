@@ -94,6 +94,11 @@ export const Items = ({ data, handleSave }) => {
   }
 
   const handleMoveToTop = (idx) => {
+    // Block just in case
+    if (idx === 0) {
+      return
+    }
+
     const element = list.splice(idx, 1)[0]
     list.unshift(element)
     handleSave(list)

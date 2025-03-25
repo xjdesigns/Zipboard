@@ -16,7 +16,7 @@ export const UUID_TYPE = 'UUID'
 
 export const TYPE_OPTIONS = [STANDARD_TYPE, HTTP_TYPE, IMAGE_TYPE, NUMBER_TYPE, UUID_TYPE]
 
-export function itemTypeDetect(item) {
+export function itemTypeDetect(item, isFavorite = false) {
   // regex values must live within the scope
   const IMAGE_CHECK = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i
   const NUMBER_CHECK = /^([0-9]|#|\+|\*|-|,)+$/gm
@@ -42,7 +42,8 @@ export function itemTypeDetect(item) {
   return {
     text: item,
     date: new Date().toLocaleDateString(),
-    type: itemType
+    type: itemType,
+    isFavorite
   }
 }
 

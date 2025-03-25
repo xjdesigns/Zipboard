@@ -2,6 +2,12 @@
   "version": 1,
   "history": [
     {
+      "text": "'origin/main'",
+      "date": "3/25/2025",
+      "type": "STANDARD_TYPE",
+      "isFavorite": true
+    },
+    {
       "text": "Submitted",
       "date": "3/23/2025",
       "type": "STANDARD",

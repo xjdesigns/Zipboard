@@ -4,62 +4,74 @@
     {
       "text": "7ed4a12c-fa14-4116-a8f3-52c33204c35d",
       "date": "3/24/2025",
-      "type": "UUID"
+      "type": "UUID",
+      "isFavorite": false
     },
     {
       "text": "7ed4a12c-fa14-4116-a8f3-52c33204c35d",
       "date": "3/24/2025",
-      "type": "UUID"
+      "type": "UUID",
+      "isFavorite": false
     },
     {
       "text": "7ed4a12c-fa14-4116-a8f3-52c33204c35d",
       "date": "3/23/2025",
-      "type": "UUID"
+      "type": "UUID",
+      "isFavorite": false
     },
     {
       "text": "Submitted",
       "date": "3/23/2025",
-      "type": "STANDARD"
+      "type": "STANDARD",
+      "isFavorite": false
     },
     {
       "text": "Submitted",
       "date": "3/23/2025",
-      "type": "STANDARD"
+      "type": "STANDARD",
+      "isFavorite": false
     },
     {
       "text": "555-88-9999",
       "date": "3/23/2025",
-      "type": "NUMBER"
+      "type": "NUMBER",
+      "isFavorite": false
     },
     {
       "text": "https://shoelace.style/components/checkbox",
       "date": "3/23/2025",
-      "type": "HTTP"
+      "type": "HTTP",
+      "isFavorite": false
     },
     {
       "text": "https://shoelace.style/components/format-date",
       "date": "3/23/2025",
-      "type": "HTTP"
+      "type": "HTTP",
+      "isFavorite": false
     },
     {
       "text": "https://shoelace.style/components/option",
       "date": "3/23/2025",
-      "type": "HTTP"
+      "type": "HTTP",
+      "isFavorite": false
     },
     {
       "text": "Submitted",
       "date": "3/23/2025",
-      "type": "STANDARD"
+      "type": "STANDARD",
+      "isFavorite": false
     },
     {
       "text": "Hello world",
       "date": "3/23/2025",
-      "type": "STANDARD"
+      "type": "STANDARD",
+      "isFavorite": false
     },
     {
       "text": "zipboard-old.png",
       "date": "3/23/2025",
-      "type": "IMAGE"
+      "type": "IMAGE",
+      "isFavorite": false
     }
   ],
   "ui": {

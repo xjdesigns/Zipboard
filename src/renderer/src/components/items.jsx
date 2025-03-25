@@ -7,7 +7,8 @@ import {
   SlAlert,
   SlIcon,
   SlSelect,
-  SlOption
+  SlOption,
+  SlTooltip
 } from './shoelace'
 import { searchConversion } from '../util/search'
 import { itemTypeDetect, TYPE_OPTIONS } from '../util/item'
@@ -90,6 +91,12 @@ export const Items = ({ data, handleSave }) => {
       }
     })
     handleSave(update)
+  }
+
+  const handleMoveToTop = (idx) => {
+    const element = list.splice(idx, 1)[0]
+    list.unshift(element)
+    handleSave(list)
   }
 
   const handleSubmit = (ev) => {
@@ -214,6 +221,14 @@ export const Items = ({ data, handleSave }) => {
                     <SlCopyButton value={l.text} />
                   </div>
                   <div className="zp-fav-action">
+                    <SlTooltip content="Move to top">
+                      <SlIconButton
+                        name="arrow-up-short"
+                        label="Move to Top"
+                        onClick={() => handleMoveToTop(idx)}
+                        disabled={idx === 0}
+                      />
+                    </SlTooltip>
                     <SlIconButton name="trash2-fill" onClick={() => handleDelete(idx)} />
                   </div>
                 </div>

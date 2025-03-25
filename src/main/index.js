@@ -61,14 +61,23 @@ app.whenReady().then(() => {
       click: () => {
         const text = clipboard.readText()
         if (text && text.length) {
-          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', { clipboardText: `${text}` })
+          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', {
+            clipboardText: `${text}`,
+            isFavorite: false
+          })
         }
       }
     },
     {
-      label: 'Clear Clipboard',
+      label: 'Add Clipboard Fav',
       click: () => {
-        clipboard.clear()
+        const text = clipboard.readText()
+        if (text && text.length) {
+          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', {
+            clipboardText: `${text}`,
+            isFavorite: true
+          })
+        }
       }
     },
     { type: 'separator' },

@@ -71,14 +71,15 @@ app.whenReady().then(() => {
         clipboard.clear()
       }
     },
+    { type: 'separator' },
     {
-      label: 'Maximize',
+      label: 'Show',
       click: () => {
         mainWindow.restore()
       }
     },
     {
-      label: 'Minimize',
+      label: 'Hide',
       click: () => {
         mainWindow.minimize()
       }

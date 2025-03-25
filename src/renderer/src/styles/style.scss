@@ -247,6 +247,11 @@
   }
 }
 
+.zp-fav-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
 // Panel
 .zp-panel {
   padding: 8px 12px;

@@ -13,6 +13,7 @@ import { searchConversion } from '../util/search'
 import { itemTypeDetect, TYPE_OPTIONS } from '../util/item'
 
 const ALL_TYPE = 'ALL'
+const FAVORITE_TYPE = 'FAVORITE'
 
 export const Items = ({ data, handleSave }) => {
   const [currentInput, setCurrentInput] = useState('')
@@ -30,7 +31,11 @@ export const Items = ({ data, handleSave }) => {
   const filtered = useMemo(() => {
     let results = list
     if (filterSearch !== ALL_TYPE) {
-      results = results.filter((r) => r.type === filterSearch)
+      if (filterSearch === FAVORITE_TYPE) {
+        results = results.filter((r) => r.isFavorite)
+      } else {
+        results = results.filter((r) => r.type === filterSearch)
+      }
     }
     if (searchValue) {
       results = results.filter((l) => {
@@ -73,6 +78,17 @@ export const Items = ({ data, handleSave }) => {
 
   const handleDelete = (idx) => {
     const update = list.filter((_, didx) => didx !== idx)
+    handleSave(update)
+  }
+
+  const handleFavorite = (idx, favoriteValue) => {
+    const update = list.map((item, lidx) => {
+      const isFavorite = lidx === idx ? favoriteValue : item.isFavorite
+      return {
+        ...item,
+        isFavorite
+      }
+    })
     handleSave(update)
   }
 
@@ -130,6 +146,7 @@ export const Items = ({ data, handleSave }) => {
                   onSlChange={handleFilter}
                 >
                   <SlOption value={ALL_TYPE}>{ALL_TYPE}</SlOption>
+                  <SlOption value={FAVORITE_TYPE}>{FAVORITE_TYPE}</SlOption>
                   {TYPE_OPTIONS.map((type) => {
                     return (
                       <SlOption value={type} key={type}>
@@ -186,8 +203,19 @@ export const Items = ({ data, handleSave }) => {
                   <div className="zp-addon zp-type">{l.type}</div>
                 </div>
                 <div>
-                  <SlIconButton name="trash2-fill" onClick={() => handleDelete(idx)} />
-                  <SlCopyButton value={l.text} />
+                  <div>
+                    <SlIconButton
+                      name={`${l.isFavorite ? 'suit-heart-fill' : 'suit-heart'}`}
+                      onClick={() => {
+                        const isFavorite = l.isFavorite ? false : true
+                        handleFavorite(idx, isFavorite)
+                      }}
+                    />
+                    <SlCopyButton value={l.text} />
+                  </div>
+                  <div className="zp-fav-action">
+                    <SlIconButton name="trash2-fill" onClick={() => handleDelete(idx)} />
+                  </div>
                 </div>
               </div>
             )

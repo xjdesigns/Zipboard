@@ -11,41 +11,38 @@ export const IMAGE_TYPE = 'IMAGE'
 // Number w/ specials
 export const NUMBER_TYPE = 'NUMBER'
 
-export const TYPE_OPTIONS = [STANDARD_TYPE, HTTP_TYPE, IMAGE_TYPE, NUMBER_TYPE]
+// UUID
+export const UUID_TYPE = 'UUID'
+
+export const TYPE_OPTIONS = [STANDARD_TYPE, HTTP_TYPE, IMAGE_TYPE, NUMBER_TYPE, UUID_TYPE]
 
 export function itemTypeDetect(item) {
   // regex values must live within the scope
   const IMAGE_CHECK = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i
   const NUMBER_CHECK = /^([0-9]|#|\+|\*|-|,)+$/gm
-
-  if (item.includes(HTTPS_CHECK) || item.includes(HTTP_CHECK)) {
-    return {
-      text: item,
-      date: new Date().toLocaleDateString(),
-      type: HTTP_TYPE
-    }
-  }
+  const UUID_CHECK = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/g
+  let itemType = 'STANDARD_TYPE'
 
   if (IMAGE_CHECK.test(item)) {
-    return {
-      text: item,
-      date: new Date().toLocaleDateString(),
-      type: IMAGE_TYPE
-    }
+    itemType = IMAGE_TYPE
+  }
+
+  if (item.includes(HTTPS_CHECK) || item.includes(HTTP_CHECK)) {
+    itemType = HTTP_TYPE
   }
 
   if (NUMBER_CHECK.test(item)) {
-    return {
-      text: item,
-      date: new Date().toLocaleDateString(),
-      type: NUMBER_TYPE
-    }
+    itemType = NUMBER_TYPE
+  }
+
+  if (UUID_CHECK.test(item)) {
+    itemType = UUID_TYPE
   }
 
   return {
     text: item,
     date: new Date().toLocaleDateString(),
-    type: STANDARD_TYPE
+    type: itemType
   }
 }
 

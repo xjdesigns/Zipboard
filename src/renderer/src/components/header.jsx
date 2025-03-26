@@ -6,17 +6,21 @@ import {
   SlDialog,
   SlSwitch,
   SlInput,
+  SlTextarea,
   SlSelect,
   SlOption,
   SlAnimation
 } from './shoelace'
 import { toggleTheme } from '../util/theme'
 import { TYPE_OPTIONS } from '../util/item'
+import { validate } from '../util/data'
 import logo from '../assets/icon.png'
 
 const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [showClear, setShowClear] = useState(false)
+  const [showData, setShowData] = useState(false)
+  const [dataToValidate, setDataToValidate] = useState('')
   const [historyLength, setHistoryLength] = useState(data.ui.historyLength)
   const [isLineClamped, setLineClamped] = useState(data.ui.lineClamp)
   const [showDates, setShowDates] = useState(data.ui.showDates)
@@ -88,13 +92,18 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
     if (ev.target.localName === 'sl-select') {
       return
     }
-    setSettingsOpen(false)
+    setShowData(false)
     setShowClear(false)
+    setSettingsOpen(false)
   }
 
   const scrollToTop = () => {
     const el = document.querySelector('#zpCore')
     el.scrollTop = 0
+  }
+
+  const handleValidation = () => {
+    const i = validate(dataToValidate)
   }
 
   return (
@@ -114,7 +123,7 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
       </header>
 
       <SlDialog label="App Settings" open={settingsOpen} onSlAfterHide={handleModalClose}>
-        {!showClear && (
+        {!showClear && !showData && (
           <div>
             <div>
               <div className="zp-theme-select">
@@ -178,7 +187,7 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
               </SlSwitch>
             </div>
             <div className="zp-divider" />
-            <div>
+            <div className="zp-mg-bt">
               <SlButton
                 size="small"
                 variant="warning"
@@ -187,6 +196,11 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
                 disabled={data.history.length === 0}
               >
                 Manage History
+              </SlButton>
+            </div>
+            <div>
+              <SlButton size="small" variant="danger" outline onClick={() => setShowData(true)}>
+                View Data
               </SlButton>
             </div>
           </div>
@@ -231,9 +245,39 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
           </div>
         )}
 
+        {showData && (
+          <div>
+            <div className="zp-mg-bt">You are entering the DANGER ZONE</div>
+            <div className="zp-data-display">
+              {/* // TODO: add a toggle to see data and copy, then validate and save */}
+              {/* // NOTE: This is a patch until I save to docs, function will remain to validate on app load */}
+              {/* <pre>
+                <code>{JSON.stringify(data, null, '  ')}</code>
+              </pre> */}
+              <SlTextarea
+                size="small"
+                placeholder="Paste your saved history data..."
+                onSlInput={(ev) => setDataToValidate(ev.target.value)}
+                rows={12}
+                resize="none"
+              />
+              <SlButton onClick={handleValidation} disabled={dataToValidate.length === 0}>
+                Validate and Save
+              </SlButton>
+            </div>
+          </div>
+        )}
+
         <SlButtonGroup slot="footer">
-          {showClear && (
-            <SlButton size="small" variant="default" onClick={() => setShowClear(false)}>
+          {(showClear || showData) && (
+            <SlButton
+              size="small"
+              variant="default"
+              onClick={() => {
+                setShowClear(false)
+                setShowData(false)
+              }}
+            >
               Back
             </SlButton>
           )}

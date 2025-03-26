@@ -6,6 +6,7 @@ import SlDrawer from '@shoelace-style/shoelace/dist/react/drawer/index.js'
 import SlAlert from '@shoelace-style/shoelace/dist/react/alert/index.js'
 import SlDialog from '@shoelace-style/shoelace/dist/react/dialog/index.js'
 import SlInput from '@shoelace-style/shoelace/dist/react/input/index.js'
+import SlTextarea from '@shoelace-style/shoelace/dist/react/textarea/index.js'
 import SlDivider from '@shoelace-style/shoelace/dist/react/divider/index.js'
 import SlSwitch from '@shoelace-style/shoelace/dist/react/switch/index.js'
 import SlSelect from '@shoelace-style/shoelace/dist/react/select/index.js'
@@ -27,6 +28,7 @@ export {
   SlAlert,
   SlDialog,
   SlInput,
+  SlTextarea,
   SlDivider,
   SlSwitch,
   SlSelect,

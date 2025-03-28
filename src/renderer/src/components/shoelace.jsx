@@ -9,6 +9,7 @@ import SlInput from '@shoelace-style/shoelace/dist/react/input/index.js'
 import SlTextarea from '@shoelace-style/shoelace/dist/react/textarea/index.js'
 import SlDivider from '@shoelace-style/shoelace/dist/react/divider/index.js'
 import SlSwitch from '@shoelace-style/shoelace/dist/react/switch/index.js'
+import SlCheckbox from '@shoelace-style/shoelace/dist/react/checkbox/index.js'
 import SlSelect from '@shoelace-style/shoelace/dist/react/select/index.js'
 import SlOption from '@shoelace-style/shoelace/dist/react/option/index.js'
 import SlSpinner from '@shoelace-style/shoelace/dist/react/spinner/index.js'
@@ -31,6 +32,7 @@ export {
   SlTextarea,
   SlDivider,
   SlSwitch,
+  SlCheckbox,
   SlSelect,
   SlOption,
   SlSpinner,

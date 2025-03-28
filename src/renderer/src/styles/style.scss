@@ -13,6 +13,10 @@
   font-weight: normal;
 }
 
+strong {
+  font-weight: 800;
+}
+
 .zp-logo-history {
   margin-top: var(--sl-spacing-medium);
   text-align: center;
@@ -36,6 +40,10 @@
   &--dim {
     color: var(--sl-color-neutral-600);
   }
+}
+
+.zp-text-danger {
+  color: var(--sl-color-danger-400);
 }
 
 .zp-code-block {
@@ -254,6 +262,10 @@
 
 .zp-data-display {
   max-height: 40vh;
+}
+
+.zp-data-text-area {
+  margin-bottom: var(--sl-spacing-small);
 }
 
 // Panel

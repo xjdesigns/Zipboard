@@ -99,8 +99,12 @@ function App() {
     setData(newData)
   }
 
-  const handleClearHistory = () => {
-    const newData = { ...data, history: [] }
+  const handleClearHistory = (canDeleteFavorite = false) => {
+    let history = []
+    if (!canDeleteFavorite) {
+      history = data.history.filter((d) => d.isFavorite)
+    }
+    const newData = { ...data, history }
     window.electron.ipcRenderer.send('SAVE_FILE', newData)
     setData(newData)
   }

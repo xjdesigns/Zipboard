@@ -2,18 +2,6 @@
   "version": 1,
   "history": [
     {
-      "text": "'origin/main'",
-      "date": "3/25/2025",
-      "type": "STANDARD_TYPE",
-      "isFavorite": true
-    },
-    {
-      "text": "Submitted",
-      "date": "3/23/2025",
-      "type": "STANDARD",
-      "isFavorite": false
-    },
-    {
       "text": "7ed4a12c-fa14-4116-a8f3-52c33204c35d",
       "date": "3/24/2025",
       "type": "UUID",
@@ -30,12 +18,6 @@
       "date": "3/23/2025",
       "type": "UUID",
       "isFavorite": true
-    },
-    {
-      "text": "Submitted",
-      "date": "3/23/2025",
-      "type": "STANDARD",
-      "isFavorite": false
     },
     {
       "text": "555-88-9999",
@@ -44,27 +26,15 @@
       "isFavorite": true
     },
     {
-      "text": "https://shoelace.style/components/checkbox",
-      "date": "3/23/2025",
-      "type": "HTTP",
-      "isFavorite": false
-    },
-    {
       "text": "https://shoelace.style/components/format-date",
       "date": "3/23/2025",
       "type": "HTTP",
-      "isFavorite": false
+      "isFavorite": true
     },
     {
       "text": "https://shoelace.style/components/option",
       "date": "3/23/2025",
       "type": "HTTP",
-      "isFavorite": false
-    },
-    {
-      "text": "Submitted",
-      "date": "3/23/2025",
-      "type": "STANDARD",
       "isFavorite": false
     },
     {

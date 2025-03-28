@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   SlButtonGroup,
   SlButton,
+  SlCopyButton,
   SlIcon,
   SlDialog,
   SlSwitch,
@@ -9,7 +10,8 @@ import {
   SlTextarea,
   SlSelect,
   SlOption,
-  SlAnimation
+  SlAnimation,
+  SlCheckbox
 } from './shoelace'
 import { toggleTheme } from '../util/theme'
 import { TYPE_OPTIONS } from '../util/item'
@@ -20,12 +22,21 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [showClear, setShowClear] = useState(false)
   const [showData, setShowData] = useState(false)
+  const [allowFavDelete, setAllowFavDelete] = useState(false)
   const [dataToValidate, setDataToValidate] = useState('')
   const [historyLength, setHistoryLength] = useState(data.ui.historyLength)
   const [isLineClamped, setLineClamped] = useState(data.ui.lineClamp)
   const [showDates, setShowDates] = useState(data.ui.showDates)
   const [showTypes, setShowTypes] = useState(data.ui.showTypes)
   const searchRule = data.ui.searchRule
+
+  const handleClearHistory = () => {
+    clearHistory(allowFavDelete)
+  }
+
+  const handleClearHistoryType = (type) => {
+    clearHistoryType(type, allowFavDelete)
+  }
 
   // There is a bug with the value not being proper here from value
   // On add value check and set to be safe
@@ -89,7 +100,7 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
   }
 
   const handleModalClose = (ev) => {
-    if (ev.target.localName === 'sl-select') {
+    if (ev.target.localName === 'sl-select' || ev.target.localName === 'sl-copy-button') {
       return
     }
     setShowData(false)
@@ -102,8 +113,14 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
     el.scrollTop = 0
   }
 
+  const handleToggleRemoveFavorites = (ev) => {
+    const checked = ev.target.checked
+    setAllowFavDelete(checked)
+  }
+
   const handleValidation = () => {
-    const i = validate(dataToValidate)
+    const data = validate(dataToValidate)
+    console.log('data', data)
   }
 
   return (
@@ -216,12 +233,17 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
             <div className="zp-mg-bt">
               This will remove all or some of your history, are you sure?
             </div>
+            <div className="zp-mg-bt">
+              <SlCheckbox checked={allowFavDelete} onSlChange={handleToggleRemoveFavorites}>
+                Remove Favorites on ALL Clear
+              </SlCheckbox>
+            </div>
             <div className="zp-btn-full zp-mg-bt">
               <SlButton
                 size="small"
                 variant="warning"
                 outline
-                onClick={clearHistory}
+                onClick={handleClearHistory}
                 disabled={data.history.length === 0}
               >
                 Clear ALL History
@@ -234,7 +256,7 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
                     size="small"
                     variant="neutral"
                     outline
-                    onClick={() => clearHistoryType(type)}
+                    onClick={() => handleClearHistoryType(type)}
                     disabled={data.history.length === 0}
                   >
                     Clear {type}
@@ -247,22 +269,26 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
 
         {showData && (
           <div>
-            <div className="zp-mg-bt">You are entering the DANGER ZONE</div>
+            <div className="zp-mg-bt">
+              You are entering the <strong className="zp-text-danger">DANGER ZONE.</strong>
+            </div>
             <div className="zp-data-display">
-              {/* // TODO: add a toggle to see data and copy, then validate and save */}
-              {/* // NOTE: This is a patch until I save to docs, function will remain to validate on app load */}
-              {/* <pre>
-                <code>{JSON.stringify(data, null, '  ')}</code>
-              </pre> */}
-              <SlTextarea
+              <SlCopyButton value={JSON.stringify(data, null, '  ')} copy-label="Copy saved data" />
+              <div className="zp-data-text-area">
+                <SlTextarea
+                  size="small"
+                  placeholder="Paste your saved history data to use..."
+                  onSlInput={(ev) => setDataToValidate(ev.target.value)}
+                  rows={12}
+                  resize="none"
+                />
+              </div>
+              <SlButton
+                onClick={handleValidation}
+                disabled={dataToValidate.length === 0}
                 size="small"
-                placeholder="Paste your saved history data..."
-                onSlInput={(ev) => setDataToValidate(ev.target.value)}
-                rows={12}
-                resize="none"
-              />
-              <SlButton onClick={handleValidation} disabled={dataToValidate.length === 0}>
-                Validate and Save
+              >
+                Validate and Save (BETA)
               </SlButton>
             </div>
           </div>

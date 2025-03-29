@@ -47,7 +47,12 @@ export function itemTypeDetect(item, isFavorite = false) {
   }
 }
 
-export function filterHistoryByType(history, type) {
-  const updated = history.filter((h) => h.type !== type)
+export function filterHistoryByType(history, type, canDeleteFavorite) {
+  let updated
+  if (canDeleteFavorite) {
+    updated = history.filter((h) => h.type !== type)
+  } else {
+    updated = history.filter((h) => h.type !== type || (h.type === type && h.isFavorite))
+  }
   return updated
 }

@@ -109,8 +109,8 @@ function App() {
     setData(newData)
   }
 
-  const handleClearHistoryType = (type) => {
-    const history = filterHistoryByType(data.history, type)
+  const handleClearHistoryType = (type, canDeleteFavorite = false) => {
+    const history = filterHistoryByType(data.history, type, canDeleteFavorite)
     const newData = { ...data, history }
     window.electron.ipcRenderer.send('SAVE_FILE', newData)
     setData(newData)

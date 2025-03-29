@@ -235,7 +235,7 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
             </div>
             <div className="zp-mg-bt">
               <SlCheckbox checked={allowFavDelete} onSlChange={handleToggleRemoveFavorites}>
-                Remove Favorites on ALL Clear
+                Remove Favorites on Clear
               </SlCheckbox>
             </div>
             <div className="zp-btn-full zp-mg-bt">

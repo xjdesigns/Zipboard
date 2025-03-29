@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "history": [],
+  "ui": {
+    "theme": "dark",
+    "lineClamp": true,
+    "historyLength": 100,
+    "showDates": true,
+    "showType": false,
+    "searchRule": "strict",
+    "showTypes": true
+  }
+}

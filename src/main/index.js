@@ -5,8 +5,11 @@ import fs from 'node:fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayImage from '../../resources/zipboard.png?asset'
-const FILE_LOCATION = join(__dirname, '../../resources/savefile.json')
+// const FILE_LOCATION = join(__dirname, '../../resources/savefile.json')
+const BASE_FILE_LOCATION = join(__dirname, '../../resources/base-save.json')
 const logSaveResults = false
+const DOCS_LOCATION = app.getPath('home')
+console.log('DOCS_LOCATION', DOCS_LOCATION)
 
 let mainWindow
 function createWindow() {
@@ -131,7 +134,8 @@ app.whenReady().then(() => {
   ipcMain.on('APP_IS_READY', (event) => {
     setTimeout(() => {
       console.warn('APP_IS_READY event')
-      getFileData(event, 'APP_LOADED')
+      // getFileData(event, 'APP_LOADED')
+      getAppData(event, 'APP_LOADED')
     }, 2000)
   })
 
@@ -141,7 +145,7 @@ app.whenReady().then(() => {
     }
 
     const file = JSON.stringify(data, null, '  ')
-    fs.writeFile(join(FILE_LOCATION), file, (err) => {
+    fs.writeFile(`${DOCS_LOCATION}/.zipboard.json`, file, (err) => {
       if (err) {
         console.error(err)
       } else {
@@ -176,11 +180,35 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-function getFileData(event, channel) {
-  fs.readFile(FILE_LOCATION, (err, data) => {
-    if (err) console.error('No File Located')
+// function getFileData(event, channel) {
+//   fs.readFile(FILE_LOCATION, (err, data) => {
+//     if (err) console.error('No File Located')
+//     if (err) {
+//       event.sender.send(channel, {})
+//       return
+//     }
+//     const file = JSON.parse(data)
+//     event.sender.send(channel, file)
+//   })
+// }
+
+function getAppData(event, channel) {
+  fs.readFile(`${DOCS_LOCATION}/.zipboard.json`, (err, data) => {
     if (err) {
-      event.sender.send(channel, {})
+      console.error('No File Located, writing base file')
+      fs.readFile(BASE_FILE_LOCATION, (err, data) => {
+        if (err) {
+          event.sender.send('APP_DATA_LOAD_ERROR', {})
+          return
+        }
+        fs.writeFile(`${DOCS_LOCATION}/.zipboard.json`, data, (err) => {
+          if (err) {
+            console.log('err', err)
+          }
+        })
+        const file = JSON.parse(data)
+        event.sender.send(channel, file)
+      })
       return
     }
     const file = JSON.parse(data)
@@ -189,7 +217,7 @@ function getFileData(event, channel) {
 }
 
 function getFileDataForCopy(idx) {
-  fs.readFile(FILE_LOCATION, (err, data) => {
+  fs.readFile(`${DOCS_LOCATION}/.zipboard.json`, (err, data) => {
     if (err) console.error('No File Located')
     if (err) {
       return

@@ -19,7 +19,7 @@ export const TYPE_OPTIONS = [STANDARD_TYPE, HTTP_TYPE, IMAGE_TYPE, NUMBER_TYPE, 
 export function itemTypeDetect(item, isFavorite = false) {
   // regex values must live within the scope
   const IMAGE_CHECK = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i
-  const NUMBER_CHECK = /^([0-9]|#|\+|\*|-|,)+$/gm
+  const NUMBER_CHECK = /^([0-9]|#|\+|\*|-|,|\s)+$/gm
   const UUID_CHECK = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/g
   let itemType = 'STANDARD_TYPE'
 

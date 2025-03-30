@@ -11,7 +11,15 @@ import {
   SlTooltip
 } from './shoelace'
 import { searchConversion } from '../util/search'
-import { itemTypeDetect, TYPE_OPTIONS } from '../util/item'
+import {
+  itemTypeDetect,
+  TYPE_OPTIONS,
+  STANDARD_TYPE,
+  HTTP_TYPE,
+  IMAGE_TYPE,
+  NUMBER_TYPE,
+  UUID_TYPE
+} from '../util/item'
 
 const ALL_TYPE = 'ALL'
 const FAVORITE_TYPE = 'FAVORITE'
@@ -109,6 +117,25 @@ export const Items = ({ data, handleSave }) => {
     handelAdd()
   }
 
+  const getDynamicListIcon = (type) => {
+    if (type === STANDARD_TYPE) {
+      return 'bag-plus-fill'
+    }
+    if (type === HTTP_TYPE) {
+      return 'router-fill'
+    }
+    if (type === IMAGE_TYPE) {
+      return 'image-fill'
+    }
+    if (type === NUMBER_TYPE) {
+      return '1-square-fill'
+    }
+    if (type === UUID_TYPE) {
+      return 'database-fill'
+    }
+    return ''
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -157,11 +184,18 @@ export const Items = ({ data, handleSave }) => {
                   value={filterSearch}
                   onSlChange={handleFilter}
                 >
-                  <SlOption value={ALL_TYPE}>{ALL_TYPE}</SlOption>
-                  <SlOption value={FAVORITE_TYPE}>{FAVORITE_TYPE}</SlOption>
+                  <SlOption value={ALL_TYPE}>
+                    <SlIcon name="wallet-fill" slot="suffix" />
+                    {ALL_TYPE}
+                  </SlOption>
+                  <SlOption value={FAVORITE_TYPE}>
+                    <SlIcon name="suit-heart-fill" slot="suffix" />
+                    {FAVORITE_TYPE}
+                  </SlOption>
                   {TYPE_OPTIONS.map((type) => {
                     return (
                       <SlOption value={type} key={type}>
+                        <SlIcon name={getDynamicListIcon(type)} slot="suffix" />
                         {type}
                       </SlOption>
                     )

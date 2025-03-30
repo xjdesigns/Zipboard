@@ -221,6 +221,10 @@ strong {
       background: var(--sl-color-violet-600);
     }
 
+    &.dot-UUID {
+      background: var(--sl-color-pink-600);
+    }
+
     &::after {
       content: "";
       position: absolute;

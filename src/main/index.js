@@ -204,6 +204,8 @@ function getAppData(event, channel) {
         fs.writeFile(`${DOCS_LOCATION}/.zipboard.json`, data, (err) => {
           if (err) {
             console.log('err', err)
+            event.sender.send('APP_DATA_LOAD_ERROR', {})
+            return
           }
         })
         const file = JSON.parse(data)

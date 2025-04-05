@@ -202,6 +202,28 @@ strong {
     color: var(--sl-color-neutral-600);
   }
 
+  .zp-list-stacked {
+    display: block;
+  
+    .zp-fav-btns {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .zp-fav-copy,
+    .zp-fav-action {
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .zp-fav-copy {
+      .zp-fav-btn {
+        order: 1;
+      }
+    }
+  }
+
   &.show-dates {
     .zp-date {
       display: block;

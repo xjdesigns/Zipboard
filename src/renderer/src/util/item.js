@@ -21,7 +21,7 @@ export function itemTypeDetect(item, isFavorite = false) {
   const IMAGE_CHECK = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i
   const NUMBER_CHECK = /^([0-9]|#|\+|\*|-|,|\s)+$/gm
   const UUID_CHECK = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/g
-  let itemType = 'STANDARD_TYPE'
+  let itemType = STANDARD_TYPE
 
   if (IMAGE_CHECK.test(item)) {
     itemType = IMAGE_TYPE

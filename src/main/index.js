@@ -9,7 +9,6 @@ import trayImage from '../../resources/zipboard.png?asset'
 const BASE_FILE_LOCATION = join(__dirname, '../../resources/base-save.json')
 const logSaveResults = false
 const DOCS_LOCATION = app.getPath('home')
-console.log('DOCS_LOCATION', DOCS_LOCATION)
 
 let mainWindow
 function createWindow() {
@@ -86,16 +85,33 @@ app.whenReady().then(() => {
     },
     { type: 'separator' },
     {
-      label: 'Copy 1st Fav',
-      click: () => {
-        getFileDataForCopy(0)
-      }
-    },
-    {
-      label: 'Copy 2nd Fav',
-      click: () => {
-        getFileDataForCopy(1)
-      }
+      label: 'Copy favorites',
+      submenu: [
+        {
+          label: 'Copy first fav',
+          click: () => {
+            getFileDataForCopy(0)
+          }
+        },
+        {
+          label: 'Copy second fav',
+          click: () => {
+            getFileDataForCopy(1)
+          }
+        },
+        {
+          label: 'Copy third fav',
+          click: () => {
+            getFileDataForCopy(2)
+          }
+        },
+        {
+          label: 'Copy fourth fav',
+          click: () => {
+            getFileDataForCopy(3)
+          }
+        }
+      ]
     },
     { type: 'separator' },
     {

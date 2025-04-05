@@ -8,6 +8,7 @@
     "showDates": true,
     "showType": false,
     "searchRule": "strict",
-    "showTypes": true
+    "showTypes": true,
+    "stackActions": false
   }
 }

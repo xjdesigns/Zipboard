@@ -28,6 +28,7 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
   const [isLineClamped, setLineClamped] = useState(data.ui.lineClamp)
   const [showDates, setShowDates] = useState(data.ui.showDates)
   const [showTypes, setShowTypes] = useState(data.ui.showTypes)
+  const [stackActions, setStackActions] = useState(data.ui.stackActions)
   const searchRule = data.ui.searchRule
 
   const handleClearHistory = () => {
@@ -86,6 +87,12 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
     const checked = ev.target.checked
     setShowTypes(checked)
     handleSaveUI(checked, 'showTypes')
+  }
+
+  const handleStackActions = (ev) => {
+    const checked = ev.target.checked
+    setStackActions(checked)
+    handleSaveUI(checked, 'stackActions')
   }
 
   const handleSearchRule = (ev) => {
@@ -198,9 +205,14 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
                 Show Dates
               </SlSwitch>
             </div>
-            <div>
+            <div className="zp-mg-bt">
               <SlSwitch checked={showTypes} onSlChange={handleShowTypes} size="small">
                 Show Types
+              </SlSwitch>
+            </div>
+            <div>
+              <SlSwitch checked={stackActions} onSlChange={handleStackActions} size="small">
+                Stack Actions
               </SlSwitch>
             </div>
             <div className="zp-divider" />

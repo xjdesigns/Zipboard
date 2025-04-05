@@ -36,6 +36,7 @@ export const Items = ({ data, handleSave }) => {
   const showDates = data.ui.showDates
   const showTypes = data.ui.showTypes
   const searchRule = data.ui.searchRule
+  const stackActions = data.ui.stackActions ?? false
 
   const filtered = useMemo(() => {
     let results = list
@@ -234,7 +235,10 @@ export const Items = ({ data, handleSave }) => {
         {filtered.length > 0 &&
           filtered.map((l, idx) => {
             return (
-              <div className="zp-flex zp-list-anchor" key={idx}>
+              <div
+                className={`zp-flex zp-list-anchor ${stackActions ? 'zp-list-stacked' : ''}`}
+                key={idx}
+              >
                 <div className="zp-flex-fill">
                   <div className="zp-list-info">
                     <div className={`zp-list-dot dot-${l.type}`} />
@@ -248,16 +252,17 @@ export const Items = ({ data, handleSave }) => {
                   <div className="zp-addon zp-date">{l.date}</div>
                   <div className="zp-addon zp-type">{l.type}</div>
                 </div>
-                <div>
-                  <div>
+                <div className="zp-fav-btns">
+                  <div className="zp-fav-copy">
                     <SlIconButton
+                      className="zp-fav-btn"
                       name={`${l.isFavorite ? 'suit-heart-fill' : 'suit-heart'}`}
                       onClick={() => {
                         const isFavorite = l.isFavorite ? false : true
                         handleFavorite(idx, isFavorite)
                       }}
                     />
-                    <SlCopyButton value={l.text} />
+                    <SlCopyButton value={l.text} className="zp-copy-btn" />
                   </div>
                   <div className="zp-fav-action">
                     <SlTooltip content="Move to top">

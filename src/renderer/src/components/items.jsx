@@ -1,90 +1,10 @@
-import { useState, useMemo } from 'react'
-import {
-  SlInput,
-  SlButton,
-  SlCopyButton,
-  SlIconButton,
-  SlAlert,
-  SlIcon,
-  SlSelect,
-  SlOption,
-  SlTooltip
-} from './shoelace'
-import { searchConversion } from '../util/search'
-import {
-  itemTypeDetect,
-  TYPE_OPTIONS,
-  STANDARD_TYPE,
-  HTTP_TYPE,
-  IMAGE_TYPE,
-  NUMBER_TYPE,
-  UUID_TYPE
-} from '../util/item'
+import { SlCopyButton, SlIconButton, SlAlert, SlIcon, SlTooltip } from './shoelace'
 
-const ALL_TYPE = 'ALL'
-const FAVORITE_TYPE = 'FAVORITE'
-
-export const Items = ({ data, handleSave }) => {
-  const [currentInput, setCurrentInput] = useState('')
-  const [lengthError, setlengthError] = useState(false)
-  const [isSearching, setIsSearching] = useState(false)
-  const [searchValue, setSearchValue] = useState('')
-  const [filterSearch, setFilterSearch] = useState(ALL_TYPE)
-  const list = data.history || []
-  const historyLength = data.ui.historyLength
+export const Items = ({ data, list, handleSave, isSearching }) => {
   const lineIsClamped = data.ui.lineClamp
   const showDates = data.ui.showDates
   const showTypes = data.ui.showTypes
-  const searchRule = data.ui.searchRule
   const stackActions = data.ui.stackActions ?? false
-
-  const filtered = useMemo(() => {
-    let results = list
-    if (filterSearch !== ALL_TYPE) {
-      if (filterSearch === FAVORITE_TYPE) {
-        results = results.filter((r) => r.isFavorite)
-      } else {
-        results = results.filter((r) => r.type === filterSearch)
-      }
-    }
-    if (searchValue) {
-      results = results.filter((l) => {
-        const s = searchConversion(l.text, searchRule)
-        return s.includes(searchValue)
-      })
-      return results
-    } else {
-      return results
-    }
-  }, [searchValue, filterSearch, data, list])
-
-  const handleFilter = (ev) => {
-    const val = ev.target.value
-    setFilterSearch(val)
-  }
-
-  const handleInput = (ev) => {
-    const val = ev.target.value
-    setCurrentInput(val)
-  }
-
-  const handelAdd = () => {
-    if (!currentInput) {
-      return
-    }
-
-    const newEntry = itemTypeDetect(currentInput)
-    const newList = [newEntry, ...list]
-    if (newList.length > historyLength) {
-      setlengthError(true)
-      const update = newList.filter((_, idx) => idx < historyLength)
-      handleSave(update)
-      return
-    }
-
-    handleSave(newList)
-    setCurrentInput('')
-  }
 
   const handleDelete = (idx) => {
     const update = list.filter((_, didx) => didx !== idx)
@@ -113,115 +33,10 @@ export const Items = ({ data, handleSave }) => {
     handleSave(list)
   }
 
-  const handleSubmit = (ev) => {
-    ev.preventDefault()
-    handelAdd()
-  }
-
-  const getDynamicListIcon = (type) => {
-    if (type === STANDARD_TYPE) {
-      return 'bag-plus-fill'
-    }
-    if (type === HTTP_TYPE) {
-      return 'router-fill'
-    }
-    if (type === IMAGE_TYPE) {
-      return 'image-fill'
-    }
-    if (type === NUMBER_TYPE) {
-      return '1-square-fill'
-    }
-    if (type === UUID_TYPE) {
-      return 'database-fill'
-    }
-    return ''
-  }
-
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div className="zp-flex">
-          <div className="zp-flex-fill">
-            <SlInput
-              clearable
-              size="small"
-              help-text="Paste a link to save"
-              onSlInput={handleInput}
-              value={currentInput}
-              placeholder="Something cool to reuse"
-            />
-          </div>
-          <SlButton size="small" onClick={handelAdd} disabled={currentInput.length === 0}>
-            Add
-          </SlButton>
-          <SlIconButton
-            name="search-heart"
-            label="Search"
-            type="submit"
-            onClick={() => setIsSearching(!isSearching)}
-          />
-        </div>
-      </form>
-
-      <SlAlert
-        variant="danger"
-        open={lengthError}
-        closable
-        onSlAfterHide={() => setlengthError(false)}
-      >
-        <SlIcon slot="icon" name="exclamation-octagon" />
-        <strong>History length.</strong>
-        <p>The last item(s) have been removed.</p>
-      </SlAlert>
-
-      <div className="zp-search">
-        {isSearching && (
-          <div className="zp-mg-tp">
-            <div className="zp-flex">
-              <div className="zp-flex-fill">
-                <SlSelect
-                  label="Filter Type"
-                  size="small"
-                  value={filterSearch}
-                  onSlChange={handleFilter}
-                >
-                  <SlOption value={ALL_TYPE}>
-                    <SlIcon name="wallet-fill" slot="suffix" />
-                    {ALL_TYPE}
-                  </SlOption>
-                  <SlOption value={FAVORITE_TYPE}>
-                    <SlIcon name="suit-heart-fill" slot="suffix" />
-                    {FAVORITE_TYPE}
-                  </SlOption>
-                  {TYPE_OPTIONS.map((type) => {
-                    return (
-                      <SlOption value={type} key={type}>
-                        <SlIcon name={getDynamicListIcon(type)} slot="suffix" />
-                        {type}
-                      </SlOption>
-                    )
-                  })}
-                </SlSelect>
-              </div>
-              <div className="zp-flex-fill">
-                <SlInput
-                  label="Search History"
-                  clearable
-                  size="small"
-                  onSlInput={(ev) => setSearchValue(ev.target.value)}
-                  value={searchValue}
-                  placeholder="Search your history"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="zp-divider" />
-
       <div className={`zp-list ${showDates ? 'show-dates' : ''} ${showTypes ? 'show-types' : ''}`}>
-        {filtered.length === 0 && (
+        {list.length === 0 && (
           <SlAlert open>
             <SlIcon slot="icon" name="info-circle" />
             {isSearching ? (
@@ -232,8 +47,8 @@ export const Items = ({ data, handleSave }) => {
           </SlAlert>
         )}
 
-        {filtered.length > 0 &&
-          filtered.map((l, idx) => {
+        {list.length > 0 &&
+          list.map((l, idx) => {
             return (
               <div
                 className={`zp-flex zp-list-anchor ${stackActions ? 'zp-list-stacked' : ''}`}

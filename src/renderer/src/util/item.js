@@ -56,3 +56,22 @@ export function filterHistoryByType(history, type, canDeleteFavorite) {
   }
   return updated
 }
+
+export const getDynamicListIcon = (type) => {
+  if (type === STANDARD_TYPE) {
+    return 'bag-plus-fill'
+  }
+  if (type === HTTP_TYPE) {
+    return 'router-fill'
+  }
+  if (type === IMAGE_TYPE) {
+    return 'image-fill'
+  }
+  if (type === NUMBER_TYPE) {
+    return '1-square-fill'
+  }
+  if (type === UUID_TYPE) {
+    return 'database-fill'
+  }
+  return ''
+}

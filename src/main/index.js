@@ -9,8 +9,11 @@ import trayImage from '../../resources/zipboard.png?asset'
 const BASE_FILE_LOCATION = join(__dirname, '../../resources/base-save.json')
 const logSaveResults = false
 const DOCS_LOCATION = app.getPath('home')
+const trayCopyCount = 20
 
 let mainWindow
+let tray
+
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -53,67 +56,13 @@ app.whenReady().then(() => {
 
   // Create the Tray and Native Image Icon
   const image = nativeImage.createFromPath(trayImage)
-  const tray = new Tray(image)
+  tray = new Tray(image)
 
   // Create the tray menu
   const template = [
     { label: 'Zipload App', enabled: false },
     { type: 'separator' },
-    {
-      label: 'Add Clipboard',
-      click: () => {
-        const text = clipboard.readText()
-        if (text && text.length) {
-          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', {
-            clipboardText: `${text}`,
-            isFavorite: false
-          })
-        }
-      }
-    },
-    {
-      label: 'Add Clipboard Fav',
-      click: () => {
-        const text = clipboard.readText()
-        if (text && text.length) {
-          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', {
-            clipboardText: `${text}`,
-            isFavorite: true
-          })
-        }
-      }
-    },
-    { type: 'separator' },
-    {
-      label: 'Copy favorites',
-      submenu: [
-        {
-          label: 'Copy first fav',
-          click: () => {
-            getFileDataForCopy(0)
-          }
-        },
-        {
-          label: 'Copy second fav',
-          click: () => {
-            getFileDataForCopy(1)
-          }
-        },
-        {
-          label: 'Copy third fav',
-          click: () => {
-            getFileDataForCopy(2)
-          }
-        },
-        {
-          label: 'Copy fourth fav',
-          click: () => {
-            getFileDataForCopy(3)
-          }
-        }
-      ]
-    },
-    { type: 'separator' },
+    { label: 'Add zips for options', enabled: false },
     {
       label: 'Show',
       click: () => {
@@ -125,19 +74,12 @@ app.whenReady().then(() => {
       click: () => {
         mainWindow.minimize()
       }
-    },
-    { type: 'separator' },
-    {
-      label: 'Quit',
-      click: () => {
-        app.quit()
-      }
     }
   ]
 
   // Create the menu and set it to the Tray
   const mainMenu = Menu.buildFromTemplate(template)
-  tray.setToolTip('My App')
+  tray.setToolTip('Zipboard')
   tray.setContextMenu(mainMenu)
 
   // Default open or close DevTools by F12 in development
@@ -231,22 +173,94 @@ function getAppData(event, channel) {
     }
     const file = JSON.parse(data)
     event.sender.send(channel, file)
+
+    const template = getTrayData(file)
+    const mainMenu = Menu.buildFromTemplate(template)
+    tray.setToolTip('Zipboard')
+    tray.setContextMenu(mainMenu)
   })
 }
 
-function getFileDataForCopy(idx) {
-  fs.readFile(`${DOCS_LOCATION}/.zipboard.json`, (err, data) => {
-    if (err) console.error('No File Located')
-    if (err) {
-      return
+function getTrayData(data) {
+  const baseTemplate = [
+    { label: 'Zipload App', enabled: false },
+    { type: 'separator' },
+    {
+      label: 'Add Clipboard',
+      click: () => {
+        const text = clipboard.readText()
+        if (text && text.length) {
+          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', {
+            clipboardText: `${text}`,
+            isFavorite: false
+          })
+        }
+      }
+    },
+    {
+      label: 'Add Clipboard Fav',
+      click: () => {
+        const text = clipboard.readText()
+        if (text && text.length) {
+          mainWindow.webContents.send('COPY_FROM_CLIPBOARD', {
+            clipboardText: `${text}`,
+            isFavorite: true
+          })
+        }
+      }
+    },
+    { type: 'separator' }
+  ]
+
+  const baseTemplateOptions = [
+    {
+      label: 'Show',
+      click: () => {
+        mainWindow.restore()
+      }
+    },
+    {
+      label: 'Hide',
+      click: () => {
+        mainWindow.minimize()
+      }
+    },
+    { type: 'separator' },
+    {
+      label: 'Quit',
+      click: () => {
+        app.quit()
+      }
     }
-    const file = JSON.parse(data)
-    const filtered = file.history.filter((i) => i.isFavorite)
-    const whichToCopy = filtered.find((_, fidx) => fidx === idx)
-    if (whichToCopy) {
-      clipboard.writeText(whichToCopy.text)
-    } else {
-      clipboard.writeText('No match to copy')
-    }
-  })
+  ]
+
+  const filtered = data.history
+    .filter((_, didx) => didx <= trayCopyCount)
+    .map((d) => {
+      if (d.text) {
+        let text = d.text.slice(0, 15)
+        if (d.text.length > 15) {
+          text = `${d.text.slice(0, 15)}...`
+        }
+        return {
+          label: text,
+          click: () => {
+            clipboard.writeText(d.text)
+          }
+        }
+      }
+      return {
+        label: 'Nothing to copy'
+      }
+    })
+  const submenu = {
+    label: 'Copy Favorites',
+    submenu: filtered
+  }
+  const separator = { type: 'separator' }
+
+  const final = [...baseTemplate, submenu, separator, ...baseTemplateOptions]
+
+  console.log('final', final)
+  return final
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   SlButtonGroup,
   SlButton,
@@ -30,6 +30,19 @@ const Header = ({ data, handleSaveUI, clearHistory, clearHistoryType }) => {
   const [showTypes, setShowTypes] = useState(data.ui.showTypes)
   const [stackActions, setStackActions] = useState(data.ui.stackActions)
   const searchRule = data.ui.searchRule
+
+  useEffect(() => {
+    const body = document.querySelector('body')
+    const fn = (ev) => {
+      if (ev.key === 'E') {
+        setSettingsOpen(true)
+      }
+    }
+
+    body.addEventListener('keypress', fn)
+
+    return () => body.removeEventListener('keypress', fn)
+  }, [])
 
   const handleClearHistory = () => {
     clearHistory(allowFavDelete)

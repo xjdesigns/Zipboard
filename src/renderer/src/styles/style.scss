@@ -184,6 +184,14 @@ strong {
   &--end {
     align-items: flex-end;
   }
+
+  &--min-block {
+    display: block;
+
+    @media (min-width: 22em) {
+      display: flex;
+    }
+  }
 }
 
 .zp-flex-fill {

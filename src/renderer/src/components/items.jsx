@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { SlCopyButton, SlIconButton, SlAlert, SlIcon, SlTooltip } from './shoelace'
+import { EditDialog } from './edit-dialog'
 
 export const Items = ({ data, list, handleSave, isSearching }) => {
+  const [openedPanel, setOpenedPanel] = useState(null)
   const lineIsClamped = data.ui.lineClamp
   const showDates = data.ui.showDates
   const showTypes = data.ui.showTypes
@@ -22,15 +25,8 @@ export const Items = ({ data, list, handleSave, isSearching }) => {
     handleSave(update)
   }
 
-  const handleMoveToTop = (idx) => {
-    // Block just in case
-    if (idx === 0) {
-      return
-    }
-
-    const element = list.splice(idx, 1)[0]
-    list.unshift(element)
-    handleSave(list)
+  const handleOpenPanel = (idx) => {
+    setOpenedPanel(idx)
   }
 
   return (
@@ -56,13 +52,20 @@ export const Items = ({ data, list, handleSave, isSearching }) => {
               >
                 <div className="zp-flex-fill">
                   <div className="zp-list-info">
-                    <div className={`zp-list-dot dot-${l.type}`} />
-                    <div
-                      className={`zp-list-text ${lineIsClamped ? 'zp-list-text--clamped' : ''}`}
-                      title={l.text}
+                    <SlTooltip
+                      content={l.tooltip}
+                      trigger="click"
+                      placement="left"
+                      disabled={!l.tooltip}
                     >
-                      {l.text}
-                    </div>
+                      <div className={`zp-list-dot dot-${l.type}`} />
+                      <div
+                        className={`zp-list-text ${lineIsClamped ? 'zp-list-text--clamped' : ''}`}
+                        title={l.text}
+                      >
+                        {l.text}
+                      </div>
+                    </SlTooltip>
                   </div>
                   <div className="zp-addon zp-date">{l.date}</div>
                   <div className="zp-addon zp-type">{l.type}</div>
@@ -80,20 +83,28 @@ export const Items = ({ data, list, handleSave, isSearching }) => {
                     <SlCopyButton value={l.text} className="zp-copy-btn" />
                   </div>
                   <div className="zp-fav-action">
-                    <SlTooltip content="Move to top">
-                      <SlIconButton
-                        name="arrow-up-short"
-                        label="Move to Top"
-                        onClick={() => handleMoveToTop(idx)}
-                        disabled={idx === 0}
-                      />
-                    </SlTooltip>
+                    <SlIconButton
+                      name="pencil-fill"
+                      label="Open Panel"
+                      onClick={() => handleOpenPanel(idx)}
+                    />
                     <SlIconButton name="trash2-fill" onClick={() => handleDelete(idx)} />
                   </div>
                 </div>
               </div>
             )
           })}
+        {openedPanel !== null && (
+          <EditDialog
+            isOpen={openedPanel !== null}
+            list={list}
+            editData={list[openedPanel]}
+            currentIndex={openedPanel}
+            positionMove={list?.length}
+            closeEdit={() => handleOpenPanel(null)}
+            handleSave={handleSave}
+          />
+        )}
       </div>
     </div>
   )

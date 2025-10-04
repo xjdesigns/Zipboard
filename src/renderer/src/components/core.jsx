@@ -129,7 +129,7 @@ const Core = ({ data, saveData }) => {
         <div className="zp-search">
           {isSearching && (
             <div className="zp-mg-tp">
-              <div className="zp-flex">
+              <div className="zp-flex zp-flex--min-block">
                 <div className="zp-flex-fill">
                   <SlSelect
                     label="Filter Type"

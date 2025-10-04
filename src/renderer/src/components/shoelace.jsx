@@ -19,6 +19,7 @@ import SlTree from '@shoelace-style/shoelace/dist/react/tree/index.js'
 import SlTreeItem from '@shoelace-style/shoelace/dist/react/tree-item/index.js'
 import SlCopyButton from '@shoelace-style/shoelace/dist/react/copy-button/index.js'
 import SlAnimation from '@shoelace-style/shoelace/dist/react/animation/index.js'
+import SlCard from '@shoelace-style/shoelace/dist/react/card/index.js'
 
 export {
   SlButton,
@@ -41,5 +42,6 @@ export {
   SlTree,
   SlTreeItem,
   SlCopyButton,
-  SlAnimation
+  SlAnimation,
+  SlCard
 }

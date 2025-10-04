@@ -260,7 +260,5 @@ function getTrayData(data) {
   const separator = { type: 'separator' }
 
   const final = [...baseTemplate, submenu, separator, ...baseTemplateOptions]
-
-  console.log('final', final)
   return final
 }

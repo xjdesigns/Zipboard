@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { SlCopyButton, SlIconButton, SlAlert, SlIcon, SlTooltip } from './shoelace'
 import { EditDialog } from './edit-dialog'
+import { DeleteDialog } from './delete.dialog'
 
 export const Items = ({ data, list, handleSave, isSearching }) => {
   const [openedPanel, setOpenedPanel] = useState(null)
+  const [deleteIdx, setDeleteIdx] = useState(null)
   const lineIsClamped = data.ui.lineClamp
   const showDates = data.ui.showDates
   const showTypes = data.ui.showTypes
@@ -88,7 +90,7 @@ export const Items = ({ data, list, handleSave, isSearching }) => {
                       label="Open Panel"
                       onClick={() => handleOpenPanel(idx)}
                     />
-                    <SlIconButton name="trash2-fill" onClick={() => handleDelete(idx)} />
+                    <SlIconButton name="trash2-fill" onClick={() => setDeleteIdx(idx)} />
                   </div>
                 </div>
               </div>
@@ -103,6 +105,14 @@ export const Items = ({ data, list, handleSave, isSearching }) => {
             positionMove={list?.length}
             closeEdit={() => handleOpenPanel(null)}
             handleSave={handleSave}
+          />
+        )}
+        {deleteIdx != null && (
+          <DeleteDialog
+            isOpen={deleteIdx != null}
+            itemToDelete={deleteIdx}
+            deleteItem={handleDelete}
+            closeDelete={() => setDeleteIdx(null)}
           />
         )}
       </div>
